@@ -25,9 +25,18 @@ func commandHelp(c *Config) error {
 
 func commandMap(c *Config) error {
 	if c.Next == ""{
+		if c.Previous != ""{
+			return errors.New("unable to go forward, already on last page")
+		}
 		c.Next = "https://pokeapi.co/api/v2/location-area/"
 	}
-	res := pokeapi.GetAllLocations(c.Next)
+	res := pokeapi.LocationResp{}
+	if cached_json, ok := c.Cache.Get(c.Next); ok {
+		res = pokeapi.GetLocationsFromCache(cached_json)
+	} else {
+		res = pokeapi.GetLocationsFromAPI(c.Next)
+	}
+	
 	
 	c.Next = res.Next
 	c.Previous = res.Previous
@@ -44,7 +53,14 @@ func commandMapBack(c *Config) error {
 	if c.Previous == ""{
 		return errors.New("unable to go back, already on first page")
 	}
-	res := pokeapi.GetAllLocations(c.Previous)
+	
+	res := pokeapi.LocationResp{}
+	if cached_json, ok := c.Cache.Get(c.Previous); ok {
+		res = pokeapi.GetLocationsFromCache(cached_json)
+	} else {
+		res = pokeapi.GetLocationsFromAPI(c.Previous)
+	}
+
 
 	c.Next = res.Next
 	c.Previous = res.Previous

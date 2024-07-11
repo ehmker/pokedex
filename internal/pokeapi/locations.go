@@ -19,7 +19,7 @@ type LocationResp struct{
 	Results []PokeLocation `json:"results"`
 }
 
-func GetAllLocations(url string) LocationResp {
+func GetLocationsFromAPI(url string) LocationResp {
 	json_body := checkResponse(url)
 	var locations LocationResp
 	err := json.Unmarshal(json_body, &locations)
@@ -47,6 +47,14 @@ func checkResponse(url string) []byte{  // ([]byte, error){
 	return body
 
 }
-	
+func GetLocationsFromCache(raw_json []byte) LocationResp {
+	var locations LocationResp
+	err := json.Unmarshal(raw_json, &locations)
 
+	if err != nil {
+		fmt.Println("error:", err)
+		return LocationResp{}
+	}
+	return locations
+}
 

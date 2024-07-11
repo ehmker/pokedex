@@ -1,7 +1,12 @@
 package main
 
+import (
+	"time"
+
+	"github.com/ehmker/pokedexcli/internal/pokecache"
+)
+
 func main(){
-	// fmt.Println(pokeapi.GetAllLocations().Results[0])
 	startREPL()
 }
 
@@ -15,11 +20,14 @@ type cliCommand struct {
 type Config struct{
 	Next string
 	Previous string
+	Cache *pokecache.PokeCache
 }
 
 func getCommands() map[string]cliCommand {
-	mapConfig := Config{}
-
+	cache := pokecache.NewCache(5 * time.Minute)
+	mapConfig := Config{
+		Cache: &cache,
+	}
 	return map[string]cliCommand{
 		"help": {
 			Name:        "help",
