@@ -21,12 +21,15 @@ type Config struct{
 	Next string
 	Previous string
 	Cache *pokecache.PokeCache
+	Pokedex map[string]Pokemon
 }
 
 func getCommands() map[string]cliCommand {
 	cache := pokecache.NewCache(5 * time.Minute)
+	pokedex := make(map[string]Pokemon)
 	config := Config{
 		Cache: &cache,
+		Pokedex: pokedex,
 	}
 	
 	return map[string]cliCommand{
@@ -42,27 +45,33 @@ func getCommands() map[string]cliCommand {
 		},
 		"map":{
 			Name: "map",
-			Description: "Displays the next 20 locations",
+			Description: "Displays the next 20 locations.",
 			Config: &config,
 			Callback: commandMap,
 		},
 		"mapb": {
 			Name: "mapb",
-			Description: "Displays the previous 20 locations",
+			Description: "Displays the previous 20 locations.",
 			Config: &config,
 			Callback: commandMapBack,
 		},
 		"explore": {
 			Name: "explore",
-			Description: "Called as 'explore <location name/id>'.\n  Displays the pokemon that appear in area.",
+			Description: "Called as 'explore <location name/id>'.\n\tDisplays the pokemon that appear in area.",
 			Config: &config,
 			Callback: commandExplore,
 		},
 		"catch": {
 			Name: "catch",
-			Description: "Called as 'catch <pokemon name/id>'.\n  Attempts to catch the pokemon and add to the pokedex",
+			Description: "Called as 'catch <pokemon name/id>'.\n\tAttempts to catch the pokemon and add to the pokedex.",
 			Config: &config,
 			Callback: commandCatch,
+		},
+		"inspect":{
+			Name: "inspect",
+			Description: "Called as 'inspect <pokemon name/id>'.\n\tPrints the base stats of the given pokemon if it has already been caught.",
+			Config: &config,
+			Callback: commandInspect,
 		},
 	}
 }

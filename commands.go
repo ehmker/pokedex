@@ -123,5 +123,24 @@ func commandCatch(c *Config, pkm string) error {
 		return nil
 	}
 	fmt.Printf("%s was caught!\n", res.Name)
+	wasAdded := AddToPokedex(res, c.Pokedex)
+	if wasAdded{
+		fmt.Printf("%s was added to the PokeDex!\n", res.Name)
+	}
 	return nil
+}
+
+func commandInspect(c *Config, pkm string) error {
+	if pkm == ""{
+		return errors.New("unable to inspect. no pokemon given")
+	}
+
+	if p, ok := c.Pokedex[pkm]; !ok {
+		fmt.Printf("'%s' has not been caught.\n  Use the 'catch' command to attempt to catch it\n", pkm)
+		return errors.New("pokemon not found")
+	} else{
+		p.PrintOutput()
+		return nil
+	}
+	
 }
