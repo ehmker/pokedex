@@ -90,7 +90,7 @@ func commandExplore(c *Config, area string) error {
 		c.Cache.Add(url, raw_json)
 	}
 
-	// fmt.Print("explore res: ",res)
+
 
 	fmt.Printf("Exploring %s\n", area)
 	fmt.Println("Found Pokemon: ")
@@ -98,5 +98,30 @@ func commandExplore(c *Config, area string) error {
 		fmt.Printf(" - %s\n", pkm.Pokemon.Name)
 	}
 
+	return nil
+}
+
+func commandCatch(c *Config, pkm string) error {
+	if pkm == ""{
+		return errors.New("unable to catch. no pokemon given for attempt")
+	}
+
+	url := fmt.Sprintf("https://pokeapi.co/api/v2/pokemon/%s/", pkm)
+	res := pokeapi.PokemonResp{}
+
+	if cached_json, ok := c.Cache.Get(url); ok {
+		res = pokeapi.GetPokemonFromCache(cached_json)
+	} else {
+		var raw_json []byte
+		res, raw_json = pokeapi.GetPokemonFromAPI(url)
+		c.Cache.Add(url, raw_json)
+	}
+
+	fmt.Printf("Throwing a Pokeball at %s...\n", res.Name)
+	if !CatchPokemon(res.BaseExperience){
+		fmt.Printf("%s escaped!\n", res.Name)
+		return nil
+	}
+	fmt.Printf("%s was caught!\n", res.Name)
 	return nil
 }

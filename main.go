@@ -58,8 +58,11 @@ func getCommands() map[string]cliCommand {
 			Config: &config,
 			Callback: commandExplore,
 		},
+		"catch": {
+			Name: "catch",
+			Description: "Called as 'catch <pokemon name/id>'.\n  Attempts to catch the pokemon and add to the pokedex",
+			Config: &config,
+			Callback: commandCatch,
+		},
 	}
 }
-
-
-
