@@ -125,7 +125,7 @@ func commandCatch(c *Config, pkm string) error {
 	fmt.Printf("%s was caught!\n", res.Name)
 	wasAdded := AddToPokedex(res, c.Pokedex)
 	if wasAdded{
-		fmt.Printf("%s was added to the PokeDex!\n\tYou may now inspect it with the inspect command", res.Name)
+		fmt.Printf("%s was added to the PokeDex!\n  You may now inspect it with the inspect command\n", res.Name)
 	}
 	return nil
 }
