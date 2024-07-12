@@ -8,29 +8,28 @@ import (
 	"net/http"
 )
 
-type PokeLocation struct {
-	Name string `json:"name"`
-	Url string `json:"url"`
-}
 type LocationResp struct{
-	Count int `json:"count"`
-	Next string `json:"next"`
-	Previous string `json:"previous"`
-	Results []PokeLocation `json:"results"`
+	Count int 					`json:"count"`
+	Next string 				`json:"next"`
+	Previous string 			`json:"previous"`
+	Results []struct {
+					Name string `json:"name"`
+					Url string 	`json:"url"`
+					} 			`json:"results"`
 }
 
-func GetLocationsFromAPI(url string) LocationResp {
+func GetLocationsFromAPI(url string) (LocationResp, []byte) {
 	json_body := checkResponse(url)
 	var locations LocationResp
 	err := json.Unmarshal(json_body, &locations)
 
 	if err != nil {
 		fmt.Println("error:", err)
-		return LocationResp{}
+		return LocationResp{}, json_body
 	}
-	return locations
+	return locations, json_body
 }
-func checkResponse(url string) []byte{  // ([]byte, error){
+func checkResponse(url string) []byte {  // ([]byte, error){
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)

@@ -14,7 +14,7 @@ type cliCommand struct {
 	Name string
 	Description string
 	Config *Config
-	Callback func(*Config) error
+	Callback func(*Config, string) error
 }
 
 type Config struct{
@@ -25,9 +25,10 @@ type Config struct{
 
 func getCommands() map[string]cliCommand {
 	cache := pokecache.NewCache(5 * time.Minute)
-	mapConfig := Config{
+	config := Config{
 		Cache: &cache,
 	}
+	
 	return map[string]cliCommand{
 		"help": {
 			Name:        "help",
@@ -42,14 +43,20 @@ func getCommands() map[string]cliCommand {
 		"map":{
 			Name: "map",
 			Description: "Displays the next 20 locations",
-			Config: &mapConfig,
+			Config: &config,
 			Callback: commandMap,
 		},
 		"mapb": {
 			Name: "mapb",
 			Description: "Displays the previous 20 locations",
-			Config: &mapConfig,
+			Config: &config,
 			Callback: commandMapBack,
+		},
+		"explore": {
+			Name: "explore",
+			Description: "Called as 'explore <location name/id>'.\n  Displays the pokemon that appear in area.",
+			Config: &config,
+			Callback: commandExplore,
 		},
 	}
 }
